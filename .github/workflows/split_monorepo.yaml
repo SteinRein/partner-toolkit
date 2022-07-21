@@ -24,7 +24,7 @@ jobs:
             -
                 if: "!startsWith(github.ref, 'refs/tags/')"
                 name: Monorepo Split of ${{ matrix.package }}
-                uses: symplify/github-action-monorepo-split@master
+                uses: symplify/github-action-monorepo-split@main
                 env:
                     GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
                 with:
@@ -39,7 +39,7 @@ jobs:
             -
                 if: "startsWith(github.ref, 'refs/tags/')"
                 name: Monorepo Split of ${{ matrix.package }}
-                uses: symplify/github-action-monorepo-split@master
+                uses: symplify/github-action-monorepo-split@main
                 env:
                     GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
                 with:
