@@ -1,0 +1,20 @@
+{
+    "name": "steinrein/partner-toolkit",
+    "type": "multi-repo",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Steinrein\\PartnerToolkit\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "bfiessinger",
+            "email": "bastian.fiessinger@steinrein.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require-dev": {
+        "symplify/monorepo-builder": "^11.0"
+    }
+}
