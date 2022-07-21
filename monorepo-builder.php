@@ -1,5 +1,6 @@
 <?php
 
+use Symplify\MonorepoBuilder\ValueObject\Option;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\AddTagToChangelogReleaseWorker;
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\PushNextDevReleaseWorker;
@@ -11,8 +12,16 @@ use Symplify\MonorepoBuilder\Release\ReleaseWorker\UpdateBranchAliasReleaseWorke
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\UpdateReplaceReleaseWorker;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
+    $parameters = $containerConfigurator->parameters();
+
+    // where are the packages located?
+    $parameters->set(Option::PACKAGE_DIRECTORIES, [
+        // default value
+        __DIR__ . '/packages',
+    ]);
+
     $services = $containerConfigurator->services();
-    
+
     # release workers - in order to execute
     $services->set(UpdateReplaceReleaseWorker::class);
     $services->set(SetCurrentMutualDependenciesReleaseWorker::class);
