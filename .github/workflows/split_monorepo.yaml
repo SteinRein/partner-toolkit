@@ -31,8 +31,8 @@ jobs:
                     package-directory: 'packages/${{ matrix.package }}'
                     split-repository-organization: 'SteinRein'
                     split-repository-name: '${{ matrix.package }}'
-                    user-name: "GitHub Action"
-                    user-email: "action@github.com"
+                    user-name: "bfiessinger"
+                    user-email: "bastian.fiessinger@steinrein.com"
                     branch: "master"
 
             # with tag
@@ -48,6 +48,6 @@ jobs:
                     package-directory: 'packages/${{ matrix.package }}'
                     split-repository-organization: 'SteinRein'
                     split-repository-name: '${{ matrix.package }}'
-                    user-name: "GitHub Action"
-                    user-email: "action@github.com"
+                    user-name: "bfiessinger"
+                    user-email: "bastian.fiessinger@steinrein.com"
                     branch: "master"
