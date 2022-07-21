@@ -1,51 +1,58 @@
 <?php
 
+/**
+ * SteinRein PHP Partner Toolkit
+ *
+ * PHP helpers to provide simple tools for implementing
+ * your SteinRein Partnership features.
+ */
+
 namespace SteinRein\Partner;
 
 /**
  * To implement features from the Partner Toolkit, you need to add the following code:
- * 
+ *
  * <?php
- * 
+ *
  * $partner_id = {{YOUR_PARTNER_ID}};
  * $form_id = {{YOUR_FORM_ID}};
  * $form_api_key = {{YOUR_FORM_API_KEY}};
- * 
+ *
  * // Configure the Form
  * // Only required if you want to update the default configuration.
  * // In most cases this can be omitted
  * $configuration = new SteinRein\Partner\PHP_Partner_Toolkit_Configuration();
- * 
+ *
  * $configuration->set_form_config([
  *   'lang'            => {{ISO_TWO_LETTER_LANGUAGE_CODE}},
  *   'exclude_branch'  => {{COMMA_SEPERATED_LIST_OF_BRANCH_IDS}},
  *   'gmaps_api_key'   => {{YOUR_GOOGLE_MAPS_API_KEY}},
  * ]);
- *  
+ *
  * $configuration->set_certificate_config([
  *   'cssPrefix'       => {{CSS_PREFIX}}, // default 'sr-certificate'
  *   'position'        => {{POSITION}}, // default 'top-right', accepted values are 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
  * ]);
- * 
+ *
  * // With Configuration
  * $steinrein_partner_toolkit = new SteinRein\Partner\PHP_Partner_Toolkit($partner_id, $form_id, $form_api_key, $configuration);
- * 
+ *
  * // Without Configuration
  * $steinrein_partner_toolkit = new SteinRein\Partner\PHP_Partner_Toolkit($partner_id, $form_id, $form_api_key);
- * 
+ *
  * // Display the Form:
  * //
  * // Add the following code to your template:
  * $steinrein_partner_toolkit->display_form_page_content();
- * 
+ *
  * // Add the following code before the closing </body> tag of your layout:
  * $steinrein_partner_toolkit->display_form_script();
- * 
+ *
  * // Display the Certificate:
  * //
  * // Add the following code before the closing </body> tag of your layout:
  * $steinrein_partner_toolkit->display_certificate_script();
- * 
+ *
  */
 
 final class PHP_Partner_Toolkit
@@ -56,8 +63,8 @@ final class PHP_Partner_Toolkit
     public ?PHP_Partner_Toolkit_Configuration $configuration;
 
     public function __construct(
-        int $partner_id, 
-        int $form_id, 
+        int $partner_id,
+        int $form_id,
         string $form_api_key,
         ?PHP_Partner_Toolkit_Configuration $configuration = null
     ) {
@@ -71,7 +78,7 @@ final class PHP_Partner_Toolkit
     {
         $this->configuration = new PHP_Partner_Toolkit_Configuration($configuration);
     }
-    
+
     public function get_form_page_content()
     {
         // Fetch text
@@ -151,7 +158,7 @@ final class PHP_Partner_Toolkit
                     padding:2px 4px;
                     white-space:nowrap;
                 }
-                
+
                 @media (max-width: 800px) {
                     .steinrein--layout-alternating-block {
                     grid-template-columns: 1fr;
@@ -170,7 +177,7 @@ final class PHP_Partner_Toolkit
 
         return $page;
     }
-    
+
     public function display_form_page_content()
     {
         echo $this->get_form_page_content();
