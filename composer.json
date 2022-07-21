@@ -2,6 +2,7 @@
     "name": "steinrein/partner-toolkit",
     "type": "multi-repo",
     "license": "MIT",
+    "version": "1.0.0",
     "autoload": {
         "psr-4": {
             "Steinrein\\PartnerToolkit\\": "src/"
