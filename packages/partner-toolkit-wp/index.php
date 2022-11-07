@@ -24,13 +24,93 @@ namespace SteinRein\Partner;
 // Make sure this file runs only from within WordPress.
 defined( 'ABSPATH' ) or die();
 
-final class WebsiteToolkit 
+final class WebsiteToolkit
 {
-    function __construct() {
-        $this->init();
-    }
+    private $container = [];
 
-    function init() {
+	/**
+	 * Magic isset to bypass referencing plugin.
+	 *
+	 * @param  string $prop Property to check.
+	 * @return bool
+	 */
+	public function __isset( $prop ) {
+		return isset( $this->{$prop} ) || isset( $this->container[ $prop ] );
+	}
+
+	/**
+	 * Magic getter method.
+	 *
+	 * @param  string $prop Property to get.
+	 * @return mixed Property value or NULL if it does not exists.
+	 */
+	public function __get( $prop ) {
+		if ( array_key_exists( $prop, $this->container ) ) {
+			return $this->container[ $prop ];
+		}
+
+		if ( isset( $this->{$prop} ) ) {
+			return $this->{$prop};
+		}
+
+		return null;
+	}
+
+	/**
+	 * Magic setter method.
+	 *
+	 * @param mixed $prop  Property to set.
+	 * @param mixed $value Value to set.
+	 */
+	public function __set( $prop, $value ) {
+		if ( property_exists( $this, $prop ) ) {
+			$this->$prop = $value;
+			return;
+		}
+
+		$this->container[ $prop ] = $value;
+	}
+
+	/**
+	 * Magic call method.
+	 *
+	 * @param  string $name      Method to call.
+	 * @param  array  $arguments Arguments to pass when calling.
+	 * @return mixed Return value of the callback.
+	 */
+	public function __call( $name, $arguments ) {
+		$hash = [
+			'plugin_dir'   => STEINREIN_PARTNER_TOOLKIT_PLUGIN_DIR,
+			'plugin_url'   => STEINREIN_PARTNER_TOOLKIT_PLUGIN_URL,
+			'includes_dir' => STEINREIN_PARTNER_TOOLKIT_PLUGIN_DIR . 'inc/',
+			'modules_dir'    => STEINREIN_PARTNER_TOOLKIT_PLUGIN_DIR . 'inc/modules/',
+		];
+
+		if ( isset( $hash[ $name ] ) ) {
+			return $hash[ $name ];
+		}
+
+		return call_user_func_array( $name, $arguments );
+	}
+
+	/**
+	 * Retrieve main WebsiteToolkit instance.
+	 *
+	 * Ensure only one instance is loaded or can be loaded.
+	 *
+	 * @see steinrein_website_toolkit()
+	 * @return SteinRein\Partner\WebsiteToolkit
+     */
+	public static function get() {
+		if ( is_null( self::$instance ) && ! ( self::$instance instanceof WebsiteToolkit ) ) {
+			self::$instance = new WebsiteToolkit();
+			self::$instance->setup();
+		}
+
+		return self::$instance;
+	}
+
+    function setup() {
         $this->define_constants();
         $this->load_files();
 
@@ -38,7 +118,8 @@ final class WebsiteToolkit
         (new Modules\Certificate())->init();
         (new Modules\InquiryForm())->init();
 
-        (new Updater())->register();
+        $updater = new Plugin_Updater( __FILE__ );
+        $updater->init();
     }
 
     function define_constants() {
@@ -75,4 +156,14 @@ final class WebsiteToolkit
     }
 }
 
-new WebsiteToolkit();
+/**
+ * Returns the main instance of WebsiteToolkit to prevent the need to use globals.
+ *
+ * @return WebsiteToolkit
+ */
+function steinrein_website_toolkit() {
+	return WebsiteToolkit::get();
+}
+
+// Start it.
+steinrein_website_toolkit();
