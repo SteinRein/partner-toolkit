@@ -1,10 +1,14 @@
 {
     "name": "steinrein/partner-toolkit",
+    "version": "1.0.0",
     "type": "multi-repo",
     "license": "MIT",
-    "version": "1.0.0",
     "autoload": {
         "psr-4": {
+            "SteinRein\\Partner\\": [
+                "packages/partner-toolkit-php/src",
+                "packages/partner-toolkit-wp/inc"
+            ],
             "Steinrein\\PartnerToolkit\\": "src/"
         }
     },
@@ -14,8 +18,16 @@
             "email": "bastian.fiessinger@steinrein.com"
         }
     ],
-    "minimum-stability": "stable",
+    "require": {
+        "php": "^7.2",
+        "symfony/http-kernel": "^5.0"
+    },
     "require-dev": {
         "symplify/monorepo-builder": "^11.0"
-    }
+    },
+    "replace": {
+        "steinrein/partner-toolkit-php": "self.version",
+        "steinrein/partner-toolkit-wp": "self.version"
+    },
+    "minimum-stability": "stable"
 }
