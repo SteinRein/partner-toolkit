@@ -26,6 +26,8 @@ defined( 'ABSPATH' ) or die();
 
 final class WebsiteToolkit
 {
+    public static $instance = null;
+
     private $container = [];
 
 	/**
