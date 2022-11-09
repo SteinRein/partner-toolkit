@@ -122,13 +122,13 @@ class InquiryForm
                             <div class="steinrein--layout-alternating-column">
                                 <h3><a href="<?php echo $content_section->link; ?>" target="_blank"><?php echo $content_section->title; ?></a></h3>
                                 <?php
-                                    $text = $content_section->text;
+                                    $section_text = $content_section->text;
 
                                     if (isset($options['coupon_code']) && !empty($options['coupon_code'])) {
-                                        $text = str_replace('{{COUPON_CODE}}', $options['coupon_code'], $text);
+                                        $section_text = str_replace('{{COUPON_CODE}}', $options['coupon_code'], $section_text);
                                     }
 
-                                    echo $text;
+                                    echo $section_text;
                                 ?>
                             </div>
                         </div>
