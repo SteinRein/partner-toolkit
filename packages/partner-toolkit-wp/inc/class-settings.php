@@ -202,7 +202,7 @@ class Settings
     }
 
     public function hidden_content_sections_callback() {
-        $page_content = wp_remote_get('http://partner-admin.test/api/form-page.json');
+        $page_content = wp_remote_get('http://partner.steinrein.com/api/form-page.json');
 
         if( is_wp_error( $page_content ) ) {
             echo '<p>' . $page_content->get_error_message() . '</p>';
