@@ -189,10 +189,10 @@ class Settings
     public function certificate_position_callback() {
         printf(
             '<select id="certificate_position" name="steinrein_toolkit_options[certificate_position]">
-                <option value="top_left" %s>Top Left</option>
-                <option value="top_right" %s>Top Right</option>
-                <option value="bottom_left" %s>Bottom Left</option>
-                <option value="bottom_right" %s>Bottom Right</option>
+                <option value="top-left" %s>Top Left</option>
+                <option value="top-right" %s>Top Right</option>
+                <option value="bottom-left" %s>Bottom Left</option>
+                <option value="bottom-right" %s>Bottom Right</option>
             </select>',
             $this->get_single_option('certificate_position') == 'top_left' ? 'selected' : '',
             $this->get_single_option('certificate_position') == 'top_right' ? 'selected' : '',
