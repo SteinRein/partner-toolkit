@@ -22,10 +22,10 @@ class Settings
     public function add_plugin_page() {
         // This page will be under "Settings"
         add_options_page(
-            'Settings Admin', 
-            'SteinRein Partner Toolkit', 
-            'manage_options', 
-            'steinrein-toolkit-admin', 
+            'Settings Admin',
+            'SteinRein Partner Toolkit',
+            'manage_options',
+            'steinrein-toolkit-admin',
             array( $this, 'create_admin_page' )
         );
     }
@@ -58,14 +58,14 @@ class Settings
             'General Settings', // Title
             array( $this, 'print_steinrein_general_settings_info' ), // Callback
             'steinrein-toolkit-admin' // Page
-        );  
+        );
 
         add_settings_field(
             'partner_id', // ID
-            'Partner ID', // Title 
+            'Partner ID', // Title
             array( $this, 'partner_id_callback' ), // Callback
             'steinrein-toolkit-admin', // Page
-            'steinrein_general_settings' // Section           
+            'steinrein_general_settings' // Section
         );
 
         add_settings_section(
@@ -73,21 +73,21 @@ class Settings
             'Form settings', // Title
             array( $this, 'print_steinrein_form_settings_info' ), // Callback
             'steinrein-toolkit-admin' // Page
-        );  
+        );
 
         add_settings_field(
-            'form_id', 
-            'Form ID', 
-            array( $this, 'form_id_callback' ), 
-            'steinrein-toolkit-admin', 
+            'form_id',
+            'Form ID',
+            array( $this, 'form_id_callback' ),
+            'steinrein-toolkit-admin',
             'steinrein_form_settings'
         );
-        
+
         add_settings_field(
-            'form_api_key', 
-            'Form API Key', 
-            array( $this, 'form_api_key_callback' ), 
-            'steinrein-toolkit-admin', 
+            'form_api_key',
+            'Form API Key',
+            array( $this, 'form_api_key_callback' ),
+            'steinrein-toolkit-admin',
             'steinrein_form_settings'
         );
 
@@ -104,12 +104,20 @@ class Settings
             'Certificate Settings', // Title
             array( $this, 'print_steinrein_certificate_settings_info' ), // Callback
             'steinrein-toolkit-admin' // Page
-        );  
+        );
 
         add_settings_field(
             'display_certificate',
             'Display Certificate',
             array( $this, 'display_certificate_callback' ),
+            'steinrein-toolkit-admin',
+            'steinrein_certificate_settings'
+        );
+
+        add_settings_field(
+            'certificate_position',
+            'Certificate Position',
+            array( $this, 'certificate_position_callback' ),
             'steinrein-toolkit-admin',
             'steinrein_certificate_settings'
         );
@@ -132,13 +140,16 @@ class Settings
         if( isset( $input['display_certificate'] ) )
             $new_input['display_certificate'] = $input['display_certificate'] ? 1 : 0;
 
+        if( isset( $input['certificate_position'] ) )
+            $new_input['certificate_position'] = sanitize_text_field( $input['certificate_position'] );
+
         return $new_input;
     }
 
     public function print_steinrein_general_settings_info() {
         print 'Enter your general settings below:';
     }
-    
+
     public function print_steinrein_form_settings_info() {
         print 'Enter your form settings below:';
     }
@@ -172,6 +183,21 @@ class Settings
         printf(
             '<input type="checkbox" id="display_certificate" name="steinrein_toolkit_options[display_certificate]" %s />',
             $this->get_single_option('display_certificate') ? 'checked' : ''
+        );
+    }
+
+    public function certificate_position_callback() {
+        printf(
+            '<select id="certificate_position" name="steinrein_toolkit_options[certificate_position]">
+                <option value="top_left" %s>Top Left</option>
+                <option value="top_right" %s>Top Right</option>
+                <option value="bottom_left" %s>Bottom Left</option>
+                <option value="bottom_right" %s>Bottom Right</option>
+            </select>',
+            $this->get_single_option('certificate_position') == 'top_left' ? 'selected' : '',
+            $this->get_single_option('certificate_position') == 'top_right' ? 'selected' : '',
+            $this->get_single_option('certificate_position') == 'bottom_left' ? 'selected' : '',
+            $this->get_single_option('certificate_position') == 'bottom_right' ? 'selected' : ''
         );
     }
 
