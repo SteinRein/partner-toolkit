@@ -23,19 +23,24 @@ class Plugin_Updater
     public function __construct($file)
     {
         $this->file = $file;
-        add_action( 'admin_init', [ $this, 'set_plugin_properties' ] );
+        $this->basename = steinrein_website_toolkit()->plugin_basename();
+
+        add_action( 'plugins_loaded', [ $this, 'set_plugin_properties' ] );
 
         return $this;
     }
 
     function set_plugin_properties() {
+		if( !function_exists('get_plugin_data') ){
+			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+		}
+
         $this->plugin = get_plugin_data( $this->file );
-        $this->basename = plugin_basename( $this->file );
-        $this->active = is_plugin_active( $this->basename );
+		$this->active = is_plugin_active( $this->basename );
     }
 
     function init() {
-        add_filter( 'pre_set_site_transient_update_plugins', [ $this, 'modify_transient' ], 10, 1 );
+        add_filter( 'site_transient_update_plugins', [ $this, 'modify_transient' ], 10, 1 );
         add_filter( 'plugins_api', [ $this, 'plugin_popup' ], 10, 3);
         add_filter( 'upgrader_post_install', [ $this, 'after_install' ], 10, 3 );
     }
@@ -55,29 +60,34 @@ class Plugin_Updater
 
 	public function modify_transient( $transient ) {
 
-		if( property_exists( $transient, 'checked') ) { // Check if transient has a checked property
+        if ( empty( $transient->checked ) ) {
+            return $transient;
+        }
 
-			if( $checked = $transient->checked ) { // Did Wordpress check for updates?
-				$this->get_repository_info(); // Get the repo info
+		$checked = $transient->checked;
 
-				$out_of_date = version_compare( $this->github_response['tag_name'], $checked[ $this->basename ], 'gt' ); // Check if we're out of date
+		$this->get_repository_info(); // Get the repo info
 
-				if( $out_of_date ) {
+		if (! $this->gh_response) {
+			return $transient;
+		}
 
-					$new_files = $this->github_response['zipball_url']; // Get the ZIP
+		$out_of_date = version_compare( $this->gh_response->name, $checked[ $this->basename ], 'gt' ); // Check if we're out of date
 
-					$slug = current( explode('/', $this->basename ) ); // Create valid slug
+		if( $out_of_date ) {
 
-					$plugin = array( // setup our plugin info
-						'url' => $this->plugin["PluginURI"],
-						'slug' => $slug,
-						'package' => $new_files,
-						'new_version' => $this->github_response['tag_name']
-					);
+			$new_files = $this->gh_response->zipball_url; // Get the ZIP
 
-					$transient->response[$this->basename] = (object) $plugin; // Return it in response
-				}
-			}
+			$slug = current( explode('/', $this->basename ) ); // Create valid slug
+
+			$plugin = array( // setup our plugin info
+				'url' => $this->plugin["PluginURI"],
+				'slug' => $slug,
+				'package' => $new_files,
+				'new_version' => $this->gh_response->name
+			);
+
+			$transient->response[$this->basename] = (object) $plugin; // Return it in response
 		}
 
 		return $transient; // Return filtered transient

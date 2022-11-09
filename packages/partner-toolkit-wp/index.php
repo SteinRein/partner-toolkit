@@ -82,10 +82,11 @@ final class WebsiteToolkit
 	 */
 	public function __call( $name, $arguments ) {
 		$hash = [
-			'plugin_dir'   => STEINREIN_PARTNER_TOOLKIT_PLUGIN_DIR,
-			'plugin_url'   => STEINREIN_PARTNER_TOOLKIT_PLUGIN_URL,
-			'includes_dir' => STEINREIN_PARTNER_TOOLKIT_PLUGIN_DIR . 'inc/',
-			'modules_dir'    => STEINREIN_PARTNER_TOOLKIT_PLUGIN_DIR . 'inc/modules/',
+			'plugin_dir'   		=> STEINREIN_PARTNER_TOOLKIT_PLUGIN_DIR,
+			'plugin_url'   		=> STEINREIN_PARTNER_TOOLKIT_PLUGIN_URL,
+			'plugin_basename'	=> STEINREIN_PARTNER_TOOLKIT_PLUGIN_BASENAME,
+			'includes_dir' 		=> STEINREIN_PARTNER_TOOLKIT_PLUGIN_DIR . 'inc/',
+			'modules_dir'    	=> STEINREIN_PARTNER_TOOLKIT_PLUGIN_DIR . 'inc/modules/',
 		];
 
 		if ( isset( $hash[ $name ] ) ) {
@@ -154,7 +155,7 @@ final class WebsiteToolkit
         require_once plugin_dir_path( __FILE__ ) . 'inc/class-settings.php';
         require_once plugin_dir_path( __FILE__ ) . 'inc/modules/class-certificate.php';
         require_once plugin_dir_path( __FILE__ ) . 'inc/modules/class-inquiry-form.php';
-        require_once plugin_dir_path( __FILE__ ) . 'inc/class-updater.php';
+        require_once plugin_dir_path( __FILE__ ) . 'inc/class-plugin-updater.php';
     }
 }
 
