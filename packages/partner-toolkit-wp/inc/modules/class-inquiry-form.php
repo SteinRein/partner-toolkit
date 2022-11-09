@@ -24,7 +24,7 @@ class InquiryForm
             wp_register_style('steinrein-inquiry-form', false);
             wp_enqueue_style('steinrein-inquiry-form');
             wp_add_inline_style(
-                'steinrein-inquiry-form', 
+                'steinrein-inquiry-form',
                 '.steinrein--layout-alternating-block {
                     display: grid;
                     grid-template-columns: 1fr 1fr;
@@ -56,7 +56,7 @@ class InquiryForm
                     padding:2px 4px;
                     white-space:nowrap;
                 }
-                
+
                 @media (max-width: 800px) {
                     .steinrein--layout-alternating-block {
                     grid-template-columns: 1fr;
@@ -70,7 +70,7 @@ class InquiryForm
                     }
                 }'
             );
-            
+
             $options = (new Settings())->get_options();
             if (!$options || !is_array($options)) {
                 return;
@@ -83,12 +83,12 @@ class InquiryForm
             }
 
             wp_enqueue_script('steinrein-inquiry-form', 'https://partner.steinrein.com/api/form.js?form_id=' . $form_id . '&api_key=' . $form_api_key , [], null, true);
-        }        
+        }
     }
 
     public function get_text() {
         $options = (new Settings())->get_options();
-        
+
         $hidden_content_sections = $options['hidden_content_sections'] ?? null;
 
         $page_content = wp_remote_get('https://partner.steinrein.com/api/form-page.json');
@@ -121,7 +121,15 @@ class InquiryForm
                             </div>
                             <div class="steinrein--layout-alternating-column">
                                 <h3><a href="<?php echo $content_section->link; ?>" target="_blank"><?php echo $content_section->title; ?></a></h3>
-                                <?php echo $content_section->text; ?>
+                                <?php
+                                    $text = $content_section->text;
+
+                                    if (isset($options['coupon_code']) && !empty($options['coupon_code'])) {
+                                        $text = str_replace('{{COUPON_CODE}}', $options['coupon_code'], $text);
+                                    }
+
+                                    echo $text;
+                                ?>
                             </div>
                         </div>
                         <?php

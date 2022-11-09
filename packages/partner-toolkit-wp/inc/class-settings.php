@@ -121,6 +121,21 @@ class Settings
             'steinrein-toolkit-admin',
             'steinrein_certificate_settings'
         );
+
+        add_settings_section(
+            'steinrein_coupon_code_settings', // ID
+            'Coupon Code Settings', // Title
+            array( $this, 'print_steinrein_coupon_code_settings_info' ), // Callback
+            'steinrein-toolkit-admin' // Page
+        );
+
+        add_settings_field(
+            'coupon_code',
+            'Coupon Code',
+            array( $this, 'coupon_code_callback' ),
+            'steinrein-toolkit-admin',
+            'steinrein_coupon_code_settings'
+        );
     }
 
     public function sanitize( $input ) {
@@ -143,6 +158,9 @@ class Settings
         if( isset( $input['certificate_position'] ) )
             $new_input['certificate_position'] = sanitize_text_field( $input['certificate_position'] );
 
+        if( isset( $input['coupon_code'] ) )
+            $new_input['coupon_code'] = sanitize_text_field( $input['coupon_code'] );
+
         return $new_input;
     }
 
@@ -156,6 +174,10 @@ class Settings
 
     public function print_steinrein_certificate_settings_info() {
         print 'Enter your certificate settings below:';
+    }
+
+    public function print_steinrein_coupon_code_settings_info() {
+        print 'Enter your coupon code settings below:';
     }
 
     public function partner_id_callback() {
@@ -219,6 +241,13 @@ class Settings
                 }
             }
         }
+    }
+
+    public function coupon_code_callback() {
+        printf(
+            '<input type="text" id="coupon_code" name="steinrein_toolkit_options[coupon_code]" value="%s" />',
+            $this->get_single_option('coupon_code') ? esc_attr( $this->get_single_option('coupon_code') ) : ''
+        );
     }
 
     public function get_options() {
