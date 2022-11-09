@@ -54,6 +54,12 @@ class Plugin_Updater
                 return $response;
             }
 
+			$response_status = wp_remote_retrieve_response_code( $response );
+
+			if ( $response_status != 200 ) {
+				return false;
+			}
+
             $this->gh_response = json_decode(wp_remote_retrieve_body($response));
         }
     }
@@ -101,6 +107,10 @@ class Plugin_Updater
 
 				$this->get_repository_info(); // Get our repo info
 
+				if (! $this->gh_response) {
+					return $result;
+				}
+
 				// Set it to an array
 				$plugin = array(
 					'name'				=> $this->plugin["Name"],
@@ -111,17 +121,17 @@ class Plugin_Updater
 					'num_ratings'				=> '10823',
 					'downloaded'				=> '14249',
 					'added'							=> '2016-01-05',
-					'version'			=> $this->github_response['tag_name'],
+					'version'			=> $this->gh_response->name,
 					'author'			=> $this->plugin["AuthorName"],
 					'author_profile'	=> $this->plugin["AuthorURI"],
-					'last_updated'		=> $this->github_response['published_at'],
+					'last_updated'		=> $this->gh_response->published_at,
 					'homepage'			=> $this->plugin["PluginURI"],
 					'short_description' => $this->plugin["Description"],
 					'sections'			=> array(
 						'Description'	=> $this->plugin["Description"],
-						'Updates'		=> $this->github_response['body'],
+						'Updates'		=> $this->gh_response->body,
 					),
-					'download_link'		=> $this->github_response['zipball_url']
+					'download_link'		=> $this->gh_response->zipball_url
 				);
 
 				return (object) $plugin; // Return the data
