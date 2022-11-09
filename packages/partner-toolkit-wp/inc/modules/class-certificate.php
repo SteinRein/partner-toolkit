@@ -24,7 +24,8 @@ class Certificate
         if (!$partner_id || empty($partner_id) || !$display_certificate) {
             return;
         }
-        
+
         wp_enqueue_script('steinrein-certificate', 'https://partner.steinrein.com/api/certificate/' . get_option( 'steinrein_toolkit_options' )['partner_id'] . '/main.js' , [], null, true);
+        wp_add_inline_script('steinrein-certificate', 'var SRCertOptions = { cssPrefix: "sr-certificate", position: "' . $options['certificate_position'] . '" };');
     }
 }
